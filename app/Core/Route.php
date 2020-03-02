@@ -9,18 +9,23 @@ class Route
     private const DEFAULT_CONTROLLER = 'NotFoundController';
     private const DEFAULT_ACTION = 'index';
 
-    private static $routes = [
-        '/' => 'IndexController',
-        'about' => 'AboutController',
-        'contact' => 'ContactController@info',
-    ];
+    private static $path;
+    private static $routes;
 
-    public static function getController(string $route): void
+    public static function init(): void
     {
-        $route = ($route === '/') ? '/' : trim($route, '/');
+        $path = $_SERVER['PATH_INFO'] ?? $_SERVER['REQUEST_URI'];
 
-        if (array_key_exists($route, self::$routes)) {
-            $controller = '\\App\\Controller\\' . self::$routes[$route];
+        self::$path = ($path === '/') ? '/' : trim($path, '/');
+    }
+
+    /**
+     * @throws Exception
+     */
+    public static function run(): void
+    {
+        if (array_key_exists(self::$path, self::$routes)) {
+            $controller = '\\App\\Controller\\' . self::$routes[self::$path];
         } else {
             http_response_code(404);
             $controller = '\\App\\Controller\\' . self::DEFAULT_CONTROLLER;
@@ -31,5 +36,13 @@ class Route
         } else {
             throw new Exception('Class ' . $controller . '.php does not exist');
         }
+    }
+
+    /**
+     * @param array $routes
+     */
+    public static function setRoutes(array $routes): void
+    {
+        self::$routes = $routes;
     }
 }

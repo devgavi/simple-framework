@@ -3,11 +3,17 @@
 namespace App;
 
 use App\Core\Route;
+use Exception;
 
 class Bootstrap
 {
     public function start(): void
     {
-        Route::getController($_SERVER['REQUEST_URI']);
+        try {
+            Route::init();
+            Route::run();
+        } catch (Exception $e) {
+            echo $e->getMessage();
+        }
     }
 }

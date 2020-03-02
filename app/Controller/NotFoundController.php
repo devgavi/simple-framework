@@ -2,9 +2,7 @@
 
 namespace App\Controller;
 
-use App\Core\BaseController;
-
-class NotFoundController extends BaseController
+class NotFoundController extends ControllerAbstract
 {
     public function index()
     {
