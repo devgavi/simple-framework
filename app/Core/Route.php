@@ -2,47 +2,81 @@
 
 namespace App\Core;
 
+use App\Controller\NotFoundController;
 use Exception;
+use Throwable;
 
 class Route
 {
-    private const DEFAULT_CONTROLLER = 'NotFoundController';
-    private const DEFAULT_ACTION = 'index';
-
-    private static $path;
-    private static $routes;
-
-    public static function init(): void
-    {
-        $path = $_SERVER['PATH_INFO'] ?? $_SERVER['REQUEST_URI'];
-
-        self::$path = ($path === '/') ? '/' : trim($path, '/');
-    }
-
     /**
+     * @param string $route
+     * @param $function
      * @throws Exception
      */
-    public static function run(): void
+    public static function get(string $route, $function): void
     {
-        if (array_key_exists(self::$path, self::$routes)) {
-            $controller = '\\App\\Controller\\' . self::$routes[self::$path];
-        } else {
-            http_response_code(404);
-            $controller = '\\App\\Controller\\' . self::DEFAULT_CONTROLLER;
+        if (!self::checkMethod('GET')) {
+            return;
         }
 
-        if (class_exists($controller)) {
-            (new $controller())->{self::DEFAULT_ACTION}();
+        if (!self::matchRoute($route)) {
+            return;
+        }
+
+        if (is_array($function)) {
+            self::dispatch($function[0], $function[1]);
         } else {
-            throw new Exception('Class ' . $controller . '.php does not exist');
+            call_user_func($function);
+        }
+
+        exit();
+    }
+
+    /**
+     * @param string $method
+     * @return bool
+     */
+    private static function checkMethod(string $method): bool
+    {
+        if ($_SERVER['REQUEST_METHOD'] === strtoupper($method)) {
+            return true;
+        } else {
+            return false;
         }
     }
 
     /**
-     * @param array $routes
+     * @param string $route
+     * @return bool
      */
-    public static function setRoutes(array $routes): void
+    private static function matchRoute(string $route): bool
     {
-        self::$routes = $routes;
+        $rawPath = $_SERVER['PATH_INFO'] ?? $_SERVER['REQUEST_URI'];
+
+        if ($rawPath === '/') {
+            $path = '/';
+        } else {
+            $path = trim($rawPath, '/');
+        }
+
+        if ($route === $path) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * @param string $controller
+     * @param string $action
+     * @throws Exception
+     */
+    public static function dispatch(string $controller, string $action): void
+    {
+        try {
+            (new $controller())->{$action}();
+        } catch (Throwable $e) {
+            echo $e->getMessage();
+        }
     }
 }

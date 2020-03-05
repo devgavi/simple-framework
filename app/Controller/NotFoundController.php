@@ -6,6 +6,6 @@ class NotFoundController extends ControllerAbstract
 {
     public function index()
     {
-        echo 'Error has been occurred';
+        echo '404 controller';
     }
 }

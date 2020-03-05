@@ -6,6 +6,6 @@ class IndexController extends ControllerAbstract
 {
     public function index()
     {
-        echo 'It works';
+        echo 'Index controller';
     }
 }

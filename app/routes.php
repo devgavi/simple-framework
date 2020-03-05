@@ -1,9 +1,16 @@
 <?php
 
 use App\Core\Route;
+use App\Controller\NotFoundController;
 
-Route::setRoutes([
-    '/' => 'IndexController',
-    'about' => 'AboutController',
-    'contact' => 'ContactController@info',
+Route::get('/', function () {
+    echo 'Test inline route';
+});
+
+Route::get('about', [
+    'App\Controller\AboutController',
+    'index'
 ]);
+
+// if route does not match
+Route::dispatch(NotFoundController::class, 'index');
