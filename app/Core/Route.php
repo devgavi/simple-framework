@@ -2,8 +2,6 @@
 
 namespace App\Core;
 
-use App\Controller\NotFoundController;
-use Exception;
 use Throwable;
 
 class Route
@@ -11,7 +9,6 @@ class Route
     /**
      * @param string $route
      * @param $function
-     * @throws Exception
      */
     public static function get(string $route, $function): void
     {
@@ -69,7 +66,6 @@ class Route
     /**
      * @param string $controller
      * @param string $action
-     * @throws Exception
      */
     public static function dispatch(string $controller, string $action): void
     {
