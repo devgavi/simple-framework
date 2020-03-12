@@ -48,12 +48,12 @@ class Route
      */
     private static function matchRoute(string $route): bool
     {
-        $rawPath = $_SERVER['PATH_INFO'] ?? $_SERVER['REQUEST_URI'];
+        preg_match('/[\w]+/', $_SERVER['REQUEST_URI'], $matches);
 
-        if ($rawPath === '/') {
+        if (empty($matches[0])) {
             $path = '/';
         } else {
-            $path = trim($rawPath, '/');
+            $path = $matches[0];
         }
 
         if ($route === $path) {
