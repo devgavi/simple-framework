@@ -2,10 +2,14 @@
 
 namespace App\Controller;
 
+use App\Core\View;
+
 class IndexController extends ControllerAbstract
 {
     public function index()
     {
-        echo 'Index controller';
+        $data['welcome'] = 'Welcome message';
+
+        View::set('index', $data);
     }
 }
