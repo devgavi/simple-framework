@@ -3,9 +3,10 @@
 use App\Core\Route;
 use App\Controller\NotFoundController;
 
-Route::get('/', function () {
-    echo 'Test inline route';
-});
+Route::get('/', [
+    'App\Controller\IndexController',
+    'index'
+]);
 
 Route::get('about', [
     'App\Controller\AboutController',

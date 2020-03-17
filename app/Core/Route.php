@@ -70,7 +70,12 @@ class Route
     public static function dispatch(string $controller, string $action): void
     {
         try {
-            (new $controller())->{$action}();
+            $content = (new $controller())->{$action}();
+
+            $response = new Response();
+            $response->setContent($content);
+
+            echo $response->getContent();
         } catch (Throwable $e) {
             echo $e->getMessage();
         }

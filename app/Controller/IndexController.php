@@ -10,6 +10,6 @@ class IndexController extends ControllerAbstract
     {
         $data['welcome'] = 'Welcome message';
 
-        View::set('index', $data);
+        return View::set('index', $data);
     }
 }

@@ -6,6 +6,6 @@ class AboutController extends ControllerAbstract
 {
     public function index()
     {
-        echo 'About controller';
+        return 'About controller';
     }
 }

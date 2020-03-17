@@ -4,16 +4,19 @@ namespace App\Core;
 
 class View
 {
-    public static $templatePath = APP . 'View/';
+    public static $templateDir = APP . 'View/';
 
     /**
      * @param string $template
      * @param array $data
+     * @return string
      */
-    public static function set(string $template, array $data): void
+    public static function set(string $template, array $data): string
     {
         extract($data);
 
-        require_once self::$templatePath . $template . '.php';
+        require_once self::$templateDir . $template . '.php';
+
+        return ob_get_clean();
     }
 }

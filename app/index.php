@@ -2,17 +2,16 @@
 
 declare(strict_types=1);
 
-define('ROOT', __DIR__ . '/../');
-define('APP', __DIR__ . '/');
-
 ini_set('display_errors', 'On');
 ini_set('display_startup_errors', 'On');
+ini_set('output_buffering', 'On');
 
 error_reporting(E_ALL);
 
+const ROOT = __DIR__ . '/../';
+const APP = __DIR__ . '/';
+
 require_once ROOT . 'vendor/autoload.php';
 
-$bootstrap = new App\Core\Bootstrap();
-$bootstrap->run();
-
+ob_start();
 require_once APP . 'routes.php';
