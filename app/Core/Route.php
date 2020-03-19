@@ -8,9 +8,9 @@ class Route
 {
     /**
      * @param string $route
-     * @param $function
+     * @param callable $function
      */
-    public static function get(string $route, $function): void
+    public static function get(string $route, callable $function): void
     {
         if (!self::checkMethod('GET')) {
             return;
@@ -20,10 +20,12 @@ class Route
             return;
         }
 
-        if (is_array($function)) {
-            self::dispatch($function[0], $function[1]);
+        $result = $function();
+
+        if (is_array($result)) {
+            self::dispatch($result[0], $result[1]);
         } else {
-            call_user_func($function);
+            $function();
         }
 
         exit();
@@ -35,11 +37,7 @@ class Route
      */
     private static function checkMethod(string $method): bool
     {
-        if ($_SERVER['REQUEST_METHOD'] === strtoupper($method)) {
-            return true;
-        } else {
-            return false;
-        }
+        return $_SERVER['REQUEST_METHOD'] === strtoupper($method);
     }
 
     /**
@@ -56,11 +54,7 @@ class Route
             $path = $matches[0];
         }
 
-        if ($route === $path) {
-            return true;
-        } else {
-            return false;
-        }
+        return $route === $path;
     }
 
     /**
@@ -72,10 +66,7 @@ class Route
         try {
             $content = (new $controller())->{$action}();
 
-            $response = new Response();
-            $response->setContent($content);
-
-            echo $response->getContent();
+            echo new Response($content);
         } catch (Throwable $e) {
             echo $e->getMessage();
         }

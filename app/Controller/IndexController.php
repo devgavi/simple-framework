@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Core\View;
+use App\Core\View\Template;
 
 class IndexController extends ControllerAbstract
 {
@@ -10,6 +11,6 @@ class IndexController extends ControllerAbstract
     {
         $data['welcome'] = 'Welcome message';
 
-        return View::set('index', $data);
+        return new Template('index', $data);
     }
 }

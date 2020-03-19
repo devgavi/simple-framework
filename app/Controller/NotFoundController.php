@@ -2,10 +2,12 @@
 
 namespace App\Controller;
 
+use App\Core\View\Simple;
+
 class NotFoundController extends ControllerAbstract
 {
     public function index()
     {
-        return '404 controller';
+        return new Simple('404 controller');
     }
 }

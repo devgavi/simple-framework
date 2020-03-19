@@ -2,27 +2,34 @@
 
 namespace App\Core;
 
+use App\Core\View\Viewable;
+
 class Response
 {
-    const HEADERS = [
-        'Content-Type: text/html',
-    ];
+    private $output;
 
-    private $content;
+    /**
+     * Response constructor.
+     * @param Viewable $content
+     */
+    public function __construct(Viewable $content)
+    {
+        $this->output = $content->getData();
+    }
 
     /**
      * @return string
      */
-    public function getContent(): string
+    public function getOutput(): string
     {
-        return $this->content;
+        return $this->output;
     }
 
     /**
-     * @param $content
+     * @return string
      */
-    public function setContent(string $content): void
+    public function __toString(): string
     {
-        $this->content = $content;
+        return $this->output;
     }
 }
