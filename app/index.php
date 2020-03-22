@@ -13,5 +13,6 @@ const APP = __DIR__ . '/';
 
 require_once ROOT . 'vendor/autoload.php';
 
-ob_start();
+// app
+
 require_once APP . 'routes.php';

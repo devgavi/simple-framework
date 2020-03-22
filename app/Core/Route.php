@@ -20,9 +20,7 @@ class Route
             return;
         }
 
-        $result = $function();
-
-        if (is_array($result)) {
+        if (is_array($result = $function())) {
             self::dispatch($result[0], $result[1]);
         } else {
             $function();
@@ -46,6 +44,14 @@ class Route
      */
     private static function matchRoute(string $route): bool
     {
+        return $route === self::getPath();
+    }
+
+    /**
+     * @return string
+     */
+    public static function getPath(): string
+    {
         preg_match('/[\w]+/', $_SERVER['REQUEST_URI'], $matches);
 
         if (empty($matches[0])) {
@@ -54,7 +60,7 @@ class Route
             $path = $matches[0];
         }
 
-        return $route === $path;
+        return $path;
     }
 
     /**
@@ -64,7 +70,7 @@ class Route
     public static function dispatch(string $controller, string $action): void
     {
         try {
-            $content = (new $controller())->{$action}();
+            $content = (new $controller)::create()->$action();
 
             echo new Response($content);
         } catch (Throwable $e) {

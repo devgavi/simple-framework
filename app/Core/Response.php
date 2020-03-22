@@ -2,19 +2,21 @@
 
 namespace App\Core;
 
-use App\Core\View\Viewable;
-
 class Response
 {
     private $output;
 
     /**
      * Response constructor.
-     * @param Viewable $content
+     * @param $content
      */
-    public function __construct(Viewable $content)
+    public function __construct($content)
     {
-        $this->output = $content->getData();
+        if ($content instanceof Template) {
+            $this->output = $content->getData();
+        } else {
+            $this->output = $content;
+        }
     }
 
     /**

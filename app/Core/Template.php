@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Core\View;
+namespace App\Core;
 
-class Template implements Viewable
+class Template
 {
     private $data;
 
@@ -18,6 +18,8 @@ class Template implements Viewable
         }
 
         extract($data, EXTR_OVERWRITE);
+
+        ob_start();
 
         require_once APP . 'View/' . $template . '.php';
 
