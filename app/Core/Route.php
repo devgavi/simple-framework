@@ -2,17 +2,30 @@
 
 namespace App\Core;
 
-use Throwable;
+use Exception;
 
 class Route
 {
     /**
-     * @param string $route
-     * @param callable $function
+     * @param string $name
+     * @param array $arguments
      */
-    public static function get(string $route, callable $function): void
+    public static function __callStatic(string $name, array $arguments): void
     {
-        if (!self::checkMethod('GET')) {
+        $allowedMethods = [
+            'GET',
+            'POST',
+            'PUT',
+            'DELETE',
+        ];
+
+        if (!in_array(strtoupper($name), $allowedMethods)) {
+            return;
+        }
+
+        [$route, $function] = $arguments;
+
+        if (!self::checkMethod(strtoupper($name))) {
             return;
         }
 
@@ -23,7 +36,7 @@ class Route
         if (is_array($result = $function())) {
             self::dispatch($result[0], $result[1]);
         } else {
-            $function();
+            echo new Response($function());
         }
 
         exit();
@@ -54,13 +67,7 @@ class Route
     {
         preg_match('/[\w]+/', $_SERVER['REQUEST_URI'], $matches);
 
-        if (empty($matches[0])) {
-            $path = '/';
-        } else {
-            $path = $matches[0];
-        }
-
-        return $path;
+        return (empty($matches[0])) ? '/' : $matches[0];
     }
 
     /**
@@ -70,11 +77,12 @@ class Route
     public static function dispatch(string $controller, string $action): void
     {
         try {
-            $content = (new $controller)::create()->$action();
+            $className = '\\App\\Controller\\' . $controller;
+            $content = (new $className)::create()->$action();
 
             echo new Response($content);
-        } catch (Throwable $e) {
-            echo $e->getMessage();
+        } catch (Exception $e) {
+            echo $e->__toString();
         }
     }
 }

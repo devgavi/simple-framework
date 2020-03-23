@@ -2,6 +2,8 @@
 
 namespace App\Core;
 
+use Exception;
+
 class Template
 {
     private $data;
@@ -10,6 +12,7 @@ class Template
      * Template constructor.
      * @param string $template
      * @param array $data
+     * @throws Exception
      */
     public function __construct(string $template, array $data)
     {

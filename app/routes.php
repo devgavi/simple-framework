@@ -1,21 +1,20 @@
 <?php
 
 use App\Core\Route;
-use App\Controller\NotFoundController;
 
 Route::get('/', function () {
     return [
-        'App\Controller\IndexController',
+        'IndexController',
         'index'
     ];
 });
 
 Route::get('about', function () {
     return [
-        'App\Controller\AboutController',
+        'AboutController',
         'index'
     ];
 });
 
 // if route does not match
-Route::dispatch(NotFoundController::class, 'index');
+Route::dispatch('NotFoundController', 'index');
