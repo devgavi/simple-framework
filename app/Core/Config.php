@@ -10,11 +10,12 @@ class Config
 
     /**
      * Config constructor.
+     * @param string $file
      * @throws Exception
      */
-    public function __construct()
+    public function __construct(string $file)
     {
-        $file = ROOT . 'config.ini';
+        $file = ROOT . $file;
 
         if (!file_exists($file)) {
             throw new Exception('Config file does not exist');

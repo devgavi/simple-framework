@@ -2,6 +2,8 @@
 
 namespace App\Core;
 
+use Exception;
+
 class Request
 {
     /**
@@ -14,20 +16,44 @@ class Request
     }
 
     /**
-     * @param string $key
-     * @return string
+     * @param string $name
+     * @param array $arguments
+     * @return mixed|string
+     * @throws Exception
      */
-    public static function get(string $key): string
+    public static function __callStatic(string $name, array $arguments)
     {
-        return self::prepare($_GET[$key]);
-    }
+        $allowedKeys = [
+            'get',
+            'post',
+            'session',
+            'cookie',
+            'server',
+        ];
 
-    /**
-     * @param string $key
-     * @return string
-     */
-    public static function post(string $key): string
-    {
-        return self::prepare($_POST[$key]);
+        if (!in_array($name, $allowedKeys)) {
+            throw new Exception('Unsupported request key');
+        }
+
+        if (!is_string($arguments[0])) {
+            throw new Exception('Argument passed to method must be string');
+        }
+
+        switch ($name) {
+            case 'get':
+                return self::prepare($_GET[$arguments[0]]);
+                break;
+            case 'post':
+                return self::prepare($_POST[$arguments[0]]);
+                break;
+            case 'session':
+                return self::prepare($_SESSION[$arguments[0]]);
+                break;
+            case 'cookie':
+                return self::prepare($_COOKIE[$arguments[0]]);
+                break;
+            default:
+                return $_SERVER[$arguments[0]];
+        }
     }
 }

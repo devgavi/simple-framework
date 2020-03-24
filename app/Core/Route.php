@@ -9,6 +9,7 @@ class Route
     /**
      * @param string $name
      * @param array $arguments
+     * @throws Exception
      */
     public static function __callStatic(string $name, array $arguments): void
     {
@@ -20,23 +21,25 @@ class Route
         ];
 
         if (!in_array(strtoupper($name), $allowedMethods)) {
-            return;
+            throw new Exception('Unsupported request method');
         }
-
-        [$route, $function] = $arguments;
 
         if (!self::checkMethod(strtoupper($name))) {
-            return;
+            throw new Exception('Real request method is wrong');
         }
+
+        [$route, $callback] = $arguments;
 
         if (!self::matchRoute($route)) {
             return;
         }
 
-        if (is_array($result = $function())) {
+        $result = call_user_func($callback);
+
+        if (is_array($result)) {
             self::dispatch($result[0], $result[1]);
         } else {
-            echo new Response($function());
+            echo new Response($result);
         }
 
         exit();

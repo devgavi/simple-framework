@@ -2,6 +2,8 @@
 
 namespace App\Core;
 
+use Exception;
+
 class Response
 {
     private $output;
@@ -9,13 +11,18 @@ class Response
     /**
      * Response constructor.
      * @param $content
+     * @throws Exception
      */
     public function __construct($content)
     {
+        if (!$content instanceof Template && !is_string($content)) {
+            throw new Exception('Data passed to response must be Template or string');
+        }
+
         if ($content instanceof Template) {
             $this->output = $content->getData();
         } else {
-            $this->output = $content;
+            $this->output = (string)$content;
         }
     }
 
