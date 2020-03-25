@@ -21,13 +21,13 @@ class Config
             throw new Exception('Config file does not exist');
         }
 
-        $this->params = parse_ini_file($file);
+        $this->params = parse_ini_file($file, true);
     }
 
     /**
      * @return array
      */
-    public function getParams(): array
+    public function getAll(): array
     {
         return $this->params;
     }
@@ -35,9 +35,16 @@ class Config
     /**
      * @param string $key
      * @return mixed
+     * @throws Exception
      */
-    public function getParam(string $key)
+    public function get(string $key)
     {
-        return $this->params[$key];
+        $keyParts = explode('.', $key);
+
+        if (count($keyParts) !== 2) {
+            throw new Exception('Config key is wrong');
+        }
+
+        return $this->params[$keyParts[0]][$keyParts[1]];
     }
 }

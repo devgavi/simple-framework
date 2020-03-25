@@ -11,8 +11,13 @@ error_reporting(E_ALL);
 const ROOT = __DIR__ . '/../';
 const APP = __DIR__ . '/';
 
-require_once ROOT . 'vendor/autoload.php';
+$container = require_once APP . 'bootstrap.php';
 
-// app
+function container($key)
+{
+    global $container;
+
+    return $container->get($key);
+}
 
 require_once APP . 'routes.php';
