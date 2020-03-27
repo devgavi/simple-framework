@@ -11,13 +11,5 @@ error_reporting(E_ALL);
 const ROOT = __DIR__ . '/../';
 const APP = __DIR__ . '/';
 
-$container = require_once APP . 'bootstrap.php';
-
-function container($key)
-{
-    global $container;
-
-    return $container->get($key);
-}
-
+require_once APP . 'bootstrap.php';
 require_once APP . 'routes.php';

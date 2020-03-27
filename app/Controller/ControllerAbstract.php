@@ -2,8 +2,12 @@
 
 namespace App\Controller;
 
+use App\Core\HelperTrait;
+
 abstract class ControllerAbstract
 {
+    use HelperTrait;
+
     /**
      * @return mixed
      */

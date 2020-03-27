@@ -8,5 +8,5 @@ require_once ROOT . 'vendor/autoload.php';
 
 $config = new Config('config.ini');
 
-return (new Container())->set('config', $config)
+Container::getInstance()->set('config', $config)
     ->set('cache', Cache::create($config->get('cache.type')));
