@@ -15,7 +15,7 @@ class Config
      */
     public function __construct(string $file)
     {
-        $file = ROOT . $file;
+        $file = __DIR__ . '/../../' . $file;
 
         if (!file_exists($file)) {
             throw new Exception('Config file does not exist');

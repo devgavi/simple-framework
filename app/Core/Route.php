@@ -25,7 +25,7 @@ class Route
         }
 
         if (!self::checkMethod(strtoupper($name))) {
-            throw new Exception('Real request method is wrong');
+            throw new Exception('Real request method is different from passed');
         }
 
         [$route, $callback] = $arguments;
@@ -76,16 +76,24 @@ class Route
     /**
      * @param string $controller
      * @param string $action
+     * @throws Exception
      */
     public static function dispatch(string $controller, string $action): void
     {
-        try {
-            $className = '\\App\\Controller\\' . $controller;
-            $content = (new $className)::create()->$action();
+        $className = '\\App\\Controller\\' . $controller;
 
-            echo new Response($content);
-        } catch (Exception $e) {
-            echo $e->__toString();
+        if (!class_exists($className)) {
+            throw new Exception("Class {$controller} does not exist");
         }
+
+        $class = new $className();
+
+        if (!is_callable([$class, $action])) {
+            throw new Exception("Method {$action} in class {$controller} does not exist or not callable");
+        }
+
+        $content = call_user_func([$class, $action]);
+
+        echo new Response($content);
     }
 }
